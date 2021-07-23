@@ -6,13 +6,8 @@ import pandas as pd
 user_agent = {'User-agent': 'Mozilla/5.0'}
 
 ticker = "FB"
-URL = "https://finance.yahoo.com/quote/{}/financials?p={}".format(
+URL = "https://finance.yahoo.com/quote/{}/cash-flow?p={}".format(
     ticker, ticker)
-# URL = "https://finance.yahoo.com/quote/{}/balance-sheet?p={}".format(
-#     ticker, ticker)
-# URL = "https://finance.yahoo.com/quote/{}/cash-flow?p={}".format(
-#     ticker, ticker)
-
 page = requests.get(URL, headers=user_agent)
 
 soup = BeautifulSoup(page.content, "html.parser")
@@ -34,4 +29,4 @@ for row in table_rows:
 
 df = pd.DataFrame(data=data, columns=headers, dtype=str)
 df.set_index(f"{headers[0]}", inplace=True)
-print({"income statement": json.loads(df.to_json())})
+print({"balance sheet": json.loads(df.to_json())})
