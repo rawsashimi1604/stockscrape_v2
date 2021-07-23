@@ -18,6 +18,8 @@ table_rows = soup.find_all("div", {"data-test": "fin-row"})
 
 # Get HEADERS
 headers = [x.text.split("/")[-1] for x in table_headers]
+headers[0] = f"{ticker} Income Statement"
+
 
 data = []
 # Populate Data
@@ -26,4 +28,5 @@ for row in table_rows:
     data.append(output)
 
 df = pd.DataFrame(data=data, columns=headers, dtype=str)
+df.set_index(f"{headers[0]}", inplace=True)
 print(df)
