@@ -6,6 +6,7 @@ import time
 import datetime
 import csv
 
+
 class Ticker():
     '''
         Ticker object that gets scrapped data from yahoo finance.
@@ -33,7 +34,8 @@ class Ticker():
         tickerURL = "https://finance.yahoo.com/quote/{}".format(self.symbol)
         soup = self.connectUrl(tickerURL)
 
-        price = soup.find("div", {"class": "D(ib) Mend(20px)"}).find("span").text
+        price = soup.find(
+            "div", {"class": "D(ib) Mend(20px)"}).find("span").text
         table1 = soup.find("table", {"data-reactid": "37"}).find_all("tr")
         table2 = soup.find("table", {"data-reactid": "78"}).find_all("tr")
 
@@ -49,7 +51,8 @@ class Ticker():
             data[extracted[0].text] = extracted[1].text
 
         mainInfo = {"main-info": data}
-        output = json.dumps({f"{self.symbol} ticker": [priceData, mainInfo]}).replace(r"\\", "")
+        output = json.dumps(
+            {f"{self.symbol} ticker": [priceData, mainInfo]}).replace(r"\\", "")
 
         return output
 
@@ -61,10 +64,12 @@ class Ticker():
         soup = self.connectUrl(tickerURL)
 
         # Description
-        description = soup.find("section", {"class": "quote-sub-section"}).find("p").text
+        description = soup.find(
+            "section", {"class": "quote-sub-section"}).find("p").text
 
         # Name
-        name_ = soup.find("div", {"class": "asset-profile-container"}).find("h3").text
+        name_ = soup.find(
+            "div", {"class": "asset-profile-container"}).find("h3").text
 
         # Sectors
         output = soup.find("p", {"data-reactid": "18"}).find_all("span")
@@ -77,7 +82,6 @@ class Ticker():
         # Key Execs
         table_headers = soup.find("table").find_all("th")
         table_data = soup.find("table").find_all("tr")
-
 
         headers = [x.text for x in table_headers]
         key_execs = []
@@ -95,7 +99,7 @@ class Ticker():
             "name": name_,
             "description": description,
             "sectors": sectors,
-            "key-executives": df.to_json().replace("\\", "")
+            "key-executives": df.to_dict()
         }).replace(r"\\", "")
 
         return output
@@ -123,7 +127,8 @@ class Ticker():
             valuations_out[valuations[i]] = valuations[i+1]
 
         # Fiscal Year ----------------------------------------------------------------------
-        fiscalTable = soup.find("table", {"data-reactid": "324"}).find_all("td")
+        fiscalTable = soup.find(
+            "table", {"data-reactid": "324"}).find_all("td")
         fiscalYear = []
         for row in fiscalTable:
             text_ = row.find("span")
@@ -138,7 +143,8 @@ class Ticker():
             fiscalYear_out[fiscalYear[i]] = fiscalYear[i+1]
 
         # Profitability --------------------------------------------------------------------
-        profitTable = soup.find("table", {"data-reactid": "345"}).find_all("td")
+        profitTable = soup.find(
+            "table", {"data-reactid": "345"}).find_all("td")
         profit = []
         for row in profitTable:
             text_ = row.find("span")
@@ -153,7 +159,8 @@ class Ticker():
             profit_out[profit[i]] = profit[i+1]
 
         # Management Effectiveness --------------------------------------------------------------------
-        manageTable = soup.find("table", {"data-reactid": "366"}).find_all("td")
+        manageTable = soup.find(
+            "table", {"data-reactid": "366"}).find_all("td")
         manage = []
         for row in manageTable:
             text_ = row.find("span")
@@ -168,7 +175,8 @@ class Ticker():
             manage_out[manage[i]] = manage[i+1]
 
         # Income Statement ---------------------------------------------------------------------------
-        incomeTable = soup.find("table", {"data-reactid": "387"}).find_all("td")
+        incomeTable = soup.find(
+            "table", {"data-reactid": "387"}).find_all("td")
         income = []
         for row in incomeTable:
             text_ = row.find("span")
@@ -183,7 +191,8 @@ class Ticker():
             income_out[income[i]] = income[i+1]
 
         # Balance Sheet ---------------------------------------------------------------------------
-        balanceTable = soup.find("table", {"data-reactid": "450"}).find_all("td")
+        balanceTable = soup.find(
+            "table", {"data-reactid": "450"}).find_all("td")
         balance = []
         for row in balanceTable:
             text_ = row.find("span")
@@ -198,7 +207,8 @@ class Ticker():
             balance_out[balance[i]] = balance[i+1]
 
         # CashFlow Statement ---------------------------------------------------------------------------
-        cashFlowTable = soup.find("table", {"data-reactid": "499"}).find_all("td")
+        cashFlowTable = soup.find(
+            "table", {"data-reactid": "499"}).find_all("td")
         cashFlow = []
         for row in cashFlowTable:
             text_ = row.find("span")
@@ -213,7 +223,8 @@ class Ticker():
             cashFlow_out[cashFlow[i]] = cashFlow[i+1]
 
         # CashFlow Statement ---------------------------------------------------------------------------
-        stockHistoryTable = soup.find("table", {"data-reactid": "87"}).find_all("td")
+        stockHistoryTable = soup.find(
+            "table", {"data-reactid": "87"}).find_all("td")
         stockHistory = []
         for row in stockHistoryTable:
             text_ = row.find("span")
@@ -228,7 +239,8 @@ class Ticker():
             stockHistory_out[stockHistory[i]] = stockHistory[i+1]
 
         # ShareStatistics Statement ---------------------------------------------------------------------------
-        shareStatsTable = soup.find("table", {"data-reactid": "143"}).find_all("td")
+        shareStatsTable = soup.find(
+            "table", {"data-reactid": "143"}).find_all("td")
         shareStats = []
         for row in shareStatsTable:
             text_ = row.find("span")
@@ -243,7 +255,8 @@ class Ticker():
             shareStats_out[shareStats[i]] = shareStats[i+1]
 
         # Dividends Statement ---------------------------------------------------------------------------
-        dividendsTable = soup.find("table", {"data-reactid": "234"}).find_all("td")
+        dividendsTable = soup.find(
+            "table", {"data-reactid": "234"}).find_all("td")
         dividends = []
         for row in dividendsTable:
             text_ = row.find("span")
@@ -317,9 +330,10 @@ class Ticker():
 
         try:
             downloadUrl = f"https://query1.finance.yahoo.com/v7/finance/download/{self.symbol}?period1={start_unix}&period2={end_unix}&interval={intervalKeywords[interval]}&events=history&includeAdjustedClose=true"
-        
+
         except:
-            raise KeyError("Please use one of the 3 values, 'day', 'week', 'month'.")
+            raise KeyError(
+                "Please use one of the 3 values, 'day', 'week', 'month'.")
 
         with requests.Session() as s:
             download = s.get(downloadUrl, headers=Ticker.user_agent)
@@ -335,11 +349,14 @@ class Ticker():
             df = pd.DataFrame(data=data, columns=headers, dtype=str)
             df.set_index("Date", inplace=True)
 
-        output = json.dumps({"historical-data": [df.to_json()]}).replace(r"\\", "")
-        
+        output = json.dumps(
+            {"historical-data": [df.to_dict()]}).replace(r"\\", "")
+
         return output
 
 
 if __name__ == "__main__":
     myTicker = Ticker("FB")
-    print(myTicker.historicalData((2020, 1, 1), (2021, 7, 22), "month"))
+    # print(json.loads(myTicker.historicalData(
+    #     (2020, 1, 1), (2021, 7, 22), "month")))
+    print(myTicker.profileInfo())
