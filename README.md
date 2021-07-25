@@ -31,7 +31,7 @@ import stockscrape
 
 Then use the intialize a ticker object.
 ```python
-myTicker = Ticker("FB") # Insert your ticker symbol here.
+myTicker = stockscrape.Ticker("FB") # Insert your ticker symbol here.
 ```
 
 Getting historical data...
@@ -45,6 +45,12 @@ Getting stock information...
 myTicker.mainInfo() # Returns general stock information such as price, P/E ratios, market capitalization etc.
 myTicker.profileInfo() # Returns stock corporate information such as CEOs, description etc.
 myTicker.statisticsInfo() # Returns stock statistics.
+```
+
+To get in a python dictionary use json, json_loads
+```python
+import json
+json.loads(myTicker.mainInfo()) # Converts json to dictionary.
 ```
 
 ## License
