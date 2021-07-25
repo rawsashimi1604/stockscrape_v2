@@ -18,9 +18,9 @@ Stockscrape uses a number of python packages to work properly.
 ## Installation
 Stockscrape requires Python 3+ to run.
 
-Install the required dependencies using pip. Simply input this command in your terminal.
+Install the module using pip. Simply input this command in your terminal.
 ```
-pip install -r requirements.txt
+pip install stockscrape
 ```
 
 ## Example Usage
