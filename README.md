@@ -31,7 +31,7 @@ import stockscrape
 
 Then use the intialize a ticker object.
 ```python
-myTicker = Ticker("FB") # Insert your ticker symbol here.
+myTicker = stockscrape.Ticker("FB") # Insert your ticker symbol here.
 ```
 
 Getting historical data...
