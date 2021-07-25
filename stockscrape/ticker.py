@@ -36,8 +36,10 @@ class Ticker():
 
         price = soup.find(
             "div", {"class": "D(ib) Mend(20px)"}).find("span").text
-        table1 = soup.find("table", {"data-reactid": "37"}).find_all("tr")
-        table2 = soup.find("table", {"data-reactid": "78"}).find_all("tr")
+        table1 = soup.find("div", {"id": "quote-summary"}
+                           ).find("table").find_all("tr")
+        table2 = soup.find("div", {"id": "quote-summary"}
+                           ).find("table").findNext("table").find_all("tr")
 
         priceData = {"price": price}
         data = {}
@@ -72,7 +74,8 @@ class Ticker():
             "div", {"class": "asset-profile-container"}).find("h3").text
 
         # Sectors
-        output = soup.find("p", {"data-reactid": "18"}).find_all("span")
+        output = soup.find(
+            "div", {"class": "asset-profile-container"}).find("p").findNext("p").find_all("span")
         data = [x.text for x in output]
         data.pop()
         sectors = {}
@@ -112,7 +115,8 @@ class Ticker():
         soup = self.connectUrl(tickerURL)
 
         # Valuations ----------------------------------------------------------------------
-        valueTable = soup.find("table", {"data-reactid": "13"}).find_all("td")
+        valueTable = soup.find("table").find_all("td")
+        nextTable = soup.find("table").findNext("table")
         valuations = []
         for row in valueTable:
             text_ = row.find("span")
@@ -126,9 +130,57 @@ class Ticker():
         for i in range(0, len(valuations), 2):
             valuations_out[valuations[i]] = valuations[i+1]
 
+        # stockHistory ---------------------------------------------------------------------------
+        stockHistoryTable = nextTable.findNext("table").find_all("td")
+        nextTable = nextTable.findNext("table")
+        stockHistory = []
+        for row in stockHistoryTable:
+            text_ = row.find("span")
+            if not text_:
+                text_ = row.text
+                stockHistory.append(text_)
+            else:
+                text_ = text_.text
+                stockHistory.append(text_)
+        stockHistory_out = {}
+        for i in range(0, len(stockHistory), 2):
+            stockHistory_out[stockHistory[i]] = stockHistory[i+1]
+
+        # ShareStatistics ---------------------------------------------------------------------------
+        shareStatsTable = nextTable.findNext("table").find_all("td")
+        nextTable = nextTable.findNext("table")
+        shareStats = []
+        for row in shareStatsTable:
+            text_ = row.find("span")
+            if not text_:
+                text_ = row.text
+                shareStats.append(text_)
+            else:
+                text_ = text_.text
+                shareStats.append(text_)
+        shareStats_out = {}
+        for i in range(0, len(shareStats), 2):
+            shareStats_out[shareStats[i]] = shareStats[i+1]
+
+        # Dividends ---------------------------------------------------------------------------
+        dividendsTable = nextTable.findNext("table").find_all("td")
+        nextTable = nextTable.findNext("table")
+        dividends = []
+        for row in dividendsTable:
+            text_ = row.find("span")
+            if not text_:
+                text_ = row.text
+                dividends.append(text_)
+            else:
+                text_ = text_.text
+                dividends.append(text_)
+        dividends_out = {}
+        for i in range(0, len(dividends), 2):
+            dividends_out[dividends[i]] = dividends[i+1]
+
         # Fiscal Year ----------------------------------------------------------------------
-        fiscalTable = soup.find(
-            "table", {"data-reactid": "324"}).find_all("td")
+        fiscalTable = nextTable.findNext("table").find_all("td")
+        nextTable = nextTable.findNext("table")
         fiscalYear = []
         for row in fiscalTable:
             text_ = row.find("span")
@@ -143,8 +195,8 @@ class Ticker():
             fiscalYear_out[fiscalYear[i]] = fiscalYear[i+1]
 
         # Profitability --------------------------------------------------------------------
-        profitTable = soup.find(
-            "table", {"data-reactid": "345"}).find_all("td")
+        profitTable = nextTable.findNext("table").find_all("td")
+        nextTable = nextTable.findNext("table")
         profit = []
         for row in profitTable:
             text_ = row.find("span")
@@ -159,8 +211,8 @@ class Ticker():
             profit_out[profit[i]] = profit[i+1]
 
         # Management Effectiveness --------------------------------------------------------------------
-        manageTable = soup.find(
-            "table", {"data-reactid": "366"}).find_all("td")
+        manageTable = nextTable.findNext("table").find_all("td")
+        nextTable = nextTable.findNext("table")
         manage = []
         for row in manageTable:
             text_ = row.find("span")
@@ -175,8 +227,8 @@ class Ticker():
             manage_out[manage[i]] = manage[i+1]
 
         # Income Statement ---------------------------------------------------------------------------
-        incomeTable = soup.find(
-            "table", {"data-reactid": "387"}).find_all("td")
+        incomeTable = nextTable.findNext("table").find_all("td")
+        nextTable = nextTable.findNext("table")
         income = []
         for row in incomeTable:
             text_ = row.find("span")
@@ -191,8 +243,8 @@ class Ticker():
             income_out[income[i]] = income[i+1]
 
         # Balance Sheet ---------------------------------------------------------------------------
-        balanceTable = soup.find(
-            "table", {"data-reactid": "450"}).find_all("td")
+        balanceTable = nextTable.findNext("table").find_all("td")
+        nextTable = nextTable.findNext("table")
         balance = []
         for row in balanceTable:
             text_ = row.find("span")
@@ -207,8 +259,7 @@ class Ticker():
             balance_out[balance[i]] = balance[i+1]
 
         # CashFlow Statement ---------------------------------------------------------------------------
-        cashFlowTable = soup.find(
-            "table", {"data-reactid": "499"}).find_all("td")
+        cashFlowTable = nextTable.find_all("td")
         cashFlow = []
         for row in cashFlowTable:
             text_ = row.find("span")
@@ -221,54 +272,6 @@ class Ticker():
         cashFlow_out = {}
         for i in range(0, len(cashFlow), 2):
             cashFlow_out[cashFlow[i]] = cashFlow[i+1]
-
-        # CashFlow Statement ---------------------------------------------------------------------------
-        stockHistoryTable = soup.find(
-            "table", {"data-reactid": "87"}).find_all("td")
-        stockHistory = []
-        for row in stockHistoryTable:
-            text_ = row.find("span")
-            if not text_:
-                text_ = row.text
-                stockHistory.append(text_)
-            else:
-                text_ = text_.text
-                stockHistory.append(text_)
-        stockHistory_out = {}
-        for i in range(0, len(stockHistory), 2):
-            stockHistory_out[stockHistory[i]] = stockHistory[i+1]
-
-        # ShareStatistics Statement ---------------------------------------------------------------------------
-        shareStatsTable = soup.find(
-            "table", {"data-reactid": "143"}).find_all("td")
-        shareStats = []
-        for row in shareStatsTable:
-            text_ = row.find("span")
-            if not text_:
-                text_ = row.text
-                shareStats.append(text_)
-            else:
-                text_ = text_.text
-                shareStats.append(text_)
-        shareStats_out = {}
-        for i in range(0, len(shareStats), 2):
-            shareStats_out[shareStats[i]] = shareStats[i+1]
-
-        # Dividends Statement ---------------------------------------------------------------------------
-        dividendsTable = soup.find(
-            "table", {"data-reactid": "234"}).find_all("td")
-        dividends = []
-        for row in dividendsTable:
-            text_ = row.find("span")
-            if not text_:
-                text_ = row.text
-                dividends.append(text_)
-            else:
-                text_ = text_.text
-                dividends.append(text_)
-        dividends_out = {}
-        for i in range(0, len(dividends), 2):
-            dividends_out[dividends[i]] = dividends[i+1]
 
         # Output
         stats_out = {
@@ -356,7 +359,7 @@ class Ticker():
 
 
 if __name__ == "__main__":
-    myTicker = Ticker("FB")
+    myTicker = Ticker("AAPL")
     # print(json.loads(myTicker.historicalData(
     #     (2020, 1, 1), (2021, 7, 22), "month")))
-    print(json.loads(myTicker.profileInfo()))
+    print(json.loads(myTicker.mainInfo()))
