@@ -8,7 +8,7 @@ import csv
 
 class Ticker():
     '''
-        Ticker object that gets scrapped data from yfinance.
+        Ticker object that gets scrapped data from yahoo finance.
     '''
 
     user_agent = {'User-agent': 'Mozilla/5.0'}
@@ -90,6 +90,9 @@ class Ticker():
 
         return output
 
+    def statisticsInfo(self):
+        pass
+
     def historicalData(self, start_date, end_date, interval="day"):
         '''
             start date: (year, month, date) # tuple
@@ -131,7 +134,8 @@ class Ticker():
         return {"historical-data": df.to_json()}
 
 
-myTicker = Ticker("FB")
-# print(myTicker.historicalData((2020, 1, 1), (2021, 7, 22), "month"))
-print(myTicker.historicalData((2020, 1, 1), (2021, 1, 1)))
+if __name__ == "__main__":
+    myTicker = Ticker("FB")
+    # print(myTicker.historicalData((2020, 1, 1), (2021, 7, 22), "month"))
+    print(myTicker.historicalData((2020, 1, 1), (2021, 1, 1)))
 
