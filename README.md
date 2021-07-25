@@ -47,5 +47,11 @@ myTicker.profileInfo() # Returns stock corporate information such as CEOs, descr
 myTicker.statisticsInfo() # Returns stock statistics.
 ```
 
+To get in a python dictionary use json, json_loads
+```python
+import json
+json.loads(myTicker.mainInfo()) # Converts json to dictionary.
+```
+
 ## License
 MIT
