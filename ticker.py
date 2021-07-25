@@ -42,9 +42,53 @@ class Ticker():
             extracted = tr.find_all("td")
             data[extracted[0].text] = extracted[1].text
 
-        mainInfo = {"mainInfo": data}
+        mainInfo = {"main-info": data}
 
         return {f"{self.symbol} ticker": [priceData, mainInfo]}
+
+    def profileInfo(self):
+        tickerURL = f"https://finance.yahoo.com/quote/{self.symbol}/profile?p={self.symbol}"
+        soup = self.connectUrl(tickerURL)
+
+        # Description
+        description = soup.find("section", {"class": "quote-sub-section"}).find("p").text
+
+        # Name
+        name_ = soup.find("div", {"class": "asset-profile-container"}).find("h3").text
+
+        # Sectors
+        output = soup.find("p", {"data-reactid": "18"}).find_all("span")
+        data = [x.text for x in output]
+        data.pop()
+        sectors = {}
+        for i in range(0, len(data), 2):
+            sectors[data[i]] = data[i+1]
+
+        # Key Execs
+        table_headers = soup.find("table").find_all("th")
+        table_data = soup.find("table").find_all("tr")
+
+
+        headers = [x.text for x in table_headers]
+        key_execs = []
+
+        for row in table_data:
+            list_ = [x.get_text() for x in row]
+            key_execs.append(list_)
+
+        key_execs.pop(0)
+        df = pd.DataFrame(data=key_execs, columns=headers, dtype=str)
+        df.set_index("Name", inplace=True)
+
+        # Output
+        output = {
+            "name": name_,
+            "description": description,
+            "sectors": sectors,
+            "key-executives": df.to_json().replace("\\", "")
+        }
+
+        return output
 
     def historicalData(self, start_date, end_date, interval="day"):
         '''
@@ -84,10 +128,10 @@ class Ticker():
             df = pd.DataFrame(data=data, columns=headers, dtype=str)
             df.set_index("Date", inplace=True)
         
-        return df.to_json()
+        return {"historical-data": df.to_json()}
 
 
 myTicker = Ticker("FB")
 # print(myTicker.historicalData((2020, 1, 1), (2021, 7, 22), "month"))
-
+print(myTicker.historicalData((2020, 1, 1), (2021, 1, 1)))
 
