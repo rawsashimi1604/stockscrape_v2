@@ -49,8 +49,9 @@ class Ticker():
             data[extracted[0].text] = extracted[1].text
 
         mainInfo = {"main-info": data}
+        output = json.dumps({f"{self.symbol} ticker": [priceData, mainInfo]}).replace(r"\\", "")
 
-        return {f"{self.symbol} ticker": [priceData, mainInfo]}
+        return output
 
     def profileInfo(self):
         '''
@@ -90,12 +91,12 @@ class Ticker():
         df.set_index("Name", inplace=True)
 
         # Output
-        output = {
+        output = json.dumps({
             "name": name_,
             "description": description,
             "sectors": sectors,
             "key-executives": df.to_json().replace("\\", "")
-        }
+        }).replace(r"\\", "")
 
         return output
 
@@ -257,7 +258,7 @@ class Ticker():
             dividends_out[dividends[i]] = dividends[i+1]
 
         # Output
-        stats_out = {
+        stats_out = json.dumps({
             "statistics": [
                 {
                     "Valuations": valuations_out
@@ -290,13 +291,14 @@ class Ticker():
                     "Dividends & Splits": dividends_out
                 }
             ]
-        }
+        }).replace(r"\\", "")
 
         return stats_out
 
     def historicalData(self, start_date, end_date, interval="day"):
         '''
             Returns historical data, JSON formatted.
+
             start date: (year, month, date) # tuple
             end date: (year, month, date) # tuple
             interval: "day", "week", "month"
@@ -332,8 +334,10 @@ class Ticker():
 
             df = pd.DataFrame(data=data, columns=headers, dtype=str)
             df.set_index("Date", inplace=True)
+
+        output = json.dumps({"historical-data": [df.to_json()]}).replace(r"\\", "")
         
-        return {"historical-data": [df.to_json()]}
+        return output
 
 
 if __name__ == "__main__":
