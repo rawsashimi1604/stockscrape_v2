@@ -10,9 +10,9 @@ setup(
     author='rawsashimi1604, Gavin Loo',                   # Type in your name
     author_email='looweiren@gmail.com',      # Type in your E-Mail
     # Provide either the link to your github or to your website
-    url='https://github.com/rawsashimi1604/stockscrap_v2',
+    url='https://github.com/rawsashimi1604/stockscrape_v2',
     # I explain this later on
-    download_url='https://github.com/rawsashimi1604/stockscrap_v2/archive/refs/tags/v2.0.tar.gz',
+    download_url='https://github.com/rawsashimi1604/stockscrape_v2/archive/refs/tags/v2.0.tar.gz',
     # Keywords that define your package best
     keywords=['FINANCE', 'WEBSCRAPING', 'STOCKS'],
     install_requires=[            # I get to this in a second
