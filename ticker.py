@@ -54,7 +54,7 @@ class Ticker():
         output = json.dumps(
             {f"{self.symbol} ticker": [priceData, mainInfo]}).replace(r"\\", "")
 
-        return output
+        return json.dumps(output, indent=4)
 
     def profileInfo(self):
         '''
@@ -102,7 +102,7 @@ class Ticker():
             "key-executives": df.to_dict()
         }).replace(r"\\", "")
 
-        return output
+        return json.dumps(output, indent=4)
 
     def statisticsInfo(self):
         '''
@@ -271,7 +271,7 @@ class Ticker():
             dividends_out[dividends[i]] = dividends[i+1]
 
         # Output
-        stats_out = json.dumps({
+        stats_out = {
             "statistics": [
                 {
                     "Valuations": valuations_out
@@ -304,9 +304,9 @@ class Ticker():
                     "Dividends & Splits": dividends_out
                 }
             ]
-        }).replace(r"\\", "")
+        }
 
-        return stats_out
+        return json.dumps(stats_out, indent=4)
 
     def historicalData(self, start_date, end_date, interval="day"):
         '''
@@ -352,11 +352,11 @@ class Ticker():
         output = json.dumps(
             {"historical-data": [df.to_dict()]}).replace(r"\\", "")
 
-        return output
+        return json.dumps(output, indent=4)
 
 
 if __name__ == "__main__":
     myTicker = Ticker("FB")
     # print(json.loads(myTicker.historicalData(
     #     (2020, 1, 1), (2021, 7, 22), "month")))
-    print(myTicker.profileInfo())
+    print(json.loads(myTicker.profileInfo()))
