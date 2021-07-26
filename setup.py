@@ -2,7 +2,7 @@ from distutils.core import setup
 setup(
     name='stockscrape',         # How you named your package folder (MyLib)
     packages=['stockscrape'],   # Chose the same as "name"
-    version='2.02',      # Start with a small number and increase it with every change you make
+    version='2.3',      # Start with a small number and increase it with every change you make
     # Chose a license from here: https://help.github.com/articles/licensing-a-repository
     license='MIT',
     # Give a short description about your library
@@ -12,7 +12,7 @@ setup(
     # Provide either the link to your github or to your website
     url='https://github.com/rawsashimi1604/stockscrape_v2',
     # I explain this later on
-    download_url='https://github.com/rawsashimi1604/stockscrape_v2/archive/refs/tags/v2.02.tar.gz',
+    download_url='https://github.com/rawsashimi1604/stockscrape_v2/archive/refs/tags/v2.3.tar.gz',
     # Keywords that define your package best
     keywords=['FINANCE', 'WEBSCRAPING', 'STOCKS'],
     install_requires=[            # I get to this in a second

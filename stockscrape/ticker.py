@@ -355,11 +355,11 @@ class Ticker():
         output = json.dumps(
             {"historical-data": [df.to_dict()]}).replace(r"\\", "")
 
-        return json.dumps(output, indent=4)
+        return output
 
 
 if __name__ == "__main__":
     myTicker = Ticker("AAPL")
-    # print(json.loads(myTicker.historicalData(
-    #     (2020, 1, 1), (2021, 7, 22), "month")))
-    print(json.loads(myTicker.mainInfo()))
+    print(json.loads(myTicker.historicalData(
+        (2020, 1, 1), (2021, 7, 22), "month")))
+    # print(json.loads(myTicker.mainInfo()))
